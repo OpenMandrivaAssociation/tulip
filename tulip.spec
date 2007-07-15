@@ -1,9 +1,10 @@
 %define name	tulip
 %define version	3.0.0
 %define betaver B6
-%define release %mkrel -c %betaver
+%define release %mkrel -c %betaver 1
 %define major	0
 %define libname	%mklibname %name %major
+%define develname %mklibname -d %name
 
 Summary:	A program that allows visualization of huge graphs
 Name:		%{name}
@@ -18,8 +19,9 @@ Patch0:     tulip-2.0.5-fix.patch
 License:	GPL
 Group:		Graphics
 BuildRoot:	%{_tmppath}/%{name}-%{version}-root
-BuildRequires:	qt3-devel
+BuildRequires:	qt4-devel
 BuildRequires:	libmesaglut-devel
+BuildRequires:	xmltex doxygen
 Obsoletes: tulip-render < %{version}
 
 %description
@@ -45,14 +47,17 @@ Provides:       lib%{name} = %version-%release
 %description -n %{libname}
 A library for handling large graphs
 
-%package -n     %{libname}-devel
+%package -n     %{develname}
 Summary:        A library for handling large graphs
 Group:          Development/Other
+Provides:	%{name}-devel = %version-%release
+Provides:	lib%{name}-devel = %version-%release
 Requires:       %libname = %version-%release
 Requires:       %{libname}-qt = %version-%release
 Requires:       %{libname}-ogl = %version-%release
+Obsoletes:	%{libname}-devel
 
-%description -n %{libname}-devel
+%description -n %{develname}
 A library for handling large graphs.
 You need this package if you plan to build apps using
 tulip libraries.
@@ -86,31 +91,31 @@ CFLAGS="$RPM_OPT_FLAGS" CXXFLAGS="$RPM_OPT_FLAGS"\
     ./configure \
     --prefix=%{_prefix} \
     --libdir=%_libdir \
-    --with-qt-dir=%qt3dir \
-    --with-qt-includes=%qt3include \
-    --with-qt-libraries=%qt3lib \
+    --with-qt-dir=%qt4dir \
+    --with-qt-includes=%qt4include \
+    --with-qt-libraries=%qt4lib \
     --with-gl-libraries=%_libdir
 
-make RPM_OPT_FLAGS="$RPM_OPT_FLAGS"
+%make RPM_OPT_FLAGS="$RPM_OPT_FLAGS"
 
 %install
 %makeinstall_std
 
-mkdir -p %buildroot{%{_menudir},%{_miconsdir},%{_iconsdir},%{_liconsdir}}
+mkdir -p %buildroot{%{_miconsdir},%{_iconsdir},%{_liconsdir}}
 
 cp %SOURCE10 %{buildroot}%{_miconsdir}/%name.png
 cp %SOURCE11 %{buildroot}%{_iconsdir}/%name.png
 cp %SOURCE12 %{buildroot}%{_liconsdir}/%name.png
 
-cat > %{buildroot}%{_menudir}/%{name} <<EOF
-?package(%{name}):\
-    command="%{_bindir}/tulip"\
-    title="Tulip"\
-    longtitle="A 3D graph program"\
-    needs="x11"\
-    section="Office/Graphs"\
-    icon="%{name}.png"\
-    xdg="true"
+mkdir -p %buildroot%{_datadir}/applications
+cat > %buildroot%{_datadir}/applications/mandriva-%{name}.desktop << EOF
+[Desktop Entry]
+Name=Tulip
+Comment=A 3D graph program
+Exec=tulip
+Icon=tulip
+Type=Application
+Categories=Qt;Graphics;3DGraphics;
 EOF
 
 %clean
@@ -135,52 +140,49 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root)
 %doc AUTHORS ChangeLog INSTALL NEWS README
 %_bindir/tulip
-%dir %_libdir/tlp
-%_libdir/tlp/bitmaps/logo32x32.bmp
-%_menudir/%name
+%{_datadir}/applications/mandriva-%{name}.desktop
 %{_miconsdir}/%name.png
 %{_iconsdir}/%name.png
 %{_liconsdir}/%name.png
 
 %files -n %{libname}
 %defattr(-,root,root)
-%_libdir/libtulip-2.0.so.*
+%_libdir/libtulip-%{version}%{betaver}.so
 %dir %_libdir/tlp
-%dir %_libdir/tlp/plugins
-%_libdir/tlp/plugins/clustering
-%_libdir/tlp/plugins/colors
-%_libdir/tlp/plugins/export
-%_libdir/tlp/plugins/import
-%_libdir/tlp/plugins/layout
-%_libdir/tlp/plugins/metric
-%_libdir/tlp/plugins/selection
-%_libdir/tlp/plugins/sizes
-%_libdir/tlp/plugins/string
 %{_datadir}/aclocal/tulip.m4
 
-%files -n %{libname}-devel
+%files -n %{develname}
 %defattr(-,root,root)
 %_bindir/tulip-config
-%_libdir/libtulip.la
-%_libdir/libtulip.a
+%_libdir/*.la
+%_libdir/*.a
 %_libdir/libtulip.so
-%_libdir/libtulip-ogl.la
-%_libdir/libtulip-ogl.a
+%_libdir/libtulip-qt4.so
 %_libdir/libtulip-ogl.so
-%_libdir/libtulip-qt3.la
-%_libdir/libtulip-qt3.a
-%_libdir/libtulip-qt3.so
+%_libdir/tlp/*.la
+%_libdir/tlp/*.a
+%_libdir/tlp/designer/*.la
+%_libdir/tlp/designer/*.a
+%_libdir/tlp/designer/libElementPropertiesWidgetPlugin.so
+%_libdir/tlp/designer/libGlGraphWidgetPlugin.so
+%_libdir/tlp/designer/libGWOverviewWidgetPlugin.so
+%_libdir/tlp/designer/libPropertyWidgetPlugin.so
+%_libdir/tlp/designer/libSGHierarchyWidgetPlugin.so
 %_includedir/%name
 
 %files -n %{libname}-ogl
 %defattr(-,root,root)
-%_libdir/libtulip-ogl-2.0.so.*
-%_libdir/tlp/plugins/glyph
+%_libdir/libtulip-ogl-%{version}%{betaver}.so
+%_libdir/tlp/glyphs
 %dir %_libdir/tlp/bitmaps
 %_libdir/tlp/bitmaps/*
 
 %files -n %{libname}-qt
 %defattr(-,root,root)
-%_libdir/libtulip-qt3-2.0.so.*
-%_libdir/tlp/plugins/designer
-
+%_libdir/libtulip-qt4-%{version}%{betaver}.so
+%_libdir/tlp/*.so
+%_libdir/tlp/designer/libElementPropertiesWidgetPlugin-%{version}%{betaver}.so
+%_libdir/tlp/designer/libGlGraphWidgetPlugin-%{version}%{betaver}.so
+%_libdir/tlp/designer/libGWOverviewWidgetPlugin-%{version}%{betaver}.so
+%_libdir/tlp/designer/libPropertyWidgetPlugin-%{version}%{betaver}.so
+%_libdir/tlp/designer/libSGHierarchyWidgetPlugin-%{version}%{betaver}.so
