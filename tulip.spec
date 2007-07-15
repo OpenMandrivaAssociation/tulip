@@ -1,17 +1,16 @@
 %define name	tulip
-%define version	2.0.5
-%define release %mkrel 2
+%define version	3.0.0
+%define betaver B6
+%define release %mkrel -c %betaver
 %define major	0
 %define libname	%mklibname %name %major
-
-%define qtdir	%{_prefix}/lib/qt3
 
 Summary:	A program that allows visualization of huge graphs
 Name:		%{name}
 Version:	%{version}
 Release:	%{release}
 URL:		http://www.tulip-software.org
-Source:		%{name}-%{version}.tar.bz2
+Source:		%{name}-%{version}%{betaver}.tar.bz2
 Source10:	%name-16.png
 Source11:	%name-32.png
 Source12:	%name-48.png
@@ -79,18 +78,17 @@ Provides:       lib%name-qt = %version-%release
 A set of Qt Widgets for Tulip/Tulip-qt
 
 %prep
-%setup -q
-%patch -p0 -b .fix
+%setup -q -n %{name}-%{version}%{betaver}
+#%patch -p0 -b .fix
 
 %build
-export QTDIR=%qtdir
 CFLAGS="$RPM_OPT_FLAGS" CXXFLAGS="$RPM_OPT_FLAGS"\
     ./configure \
     --prefix=%{_prefix} \
     --libdir=%_libdir \
-    --with-qt-dir=%qtdir \
-    --with-qt-includes=%qtdir/includes \
-    --with-qt-libraries=%qtdir/%_lib \
+    --with-qt-dir=%qt3dir \
+    --with-qt-includes=%qt3include \
+    --with-qt-libraries=%qt3lib \
     --with-gl-libraries=%_libdir
 
 make RPM_OPT_FLAGS="$RPM_OPT_FLAGS"
