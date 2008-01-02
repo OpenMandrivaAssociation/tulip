@@ -18,6 +18,7 @@ Source12:	%name-48.png
 Patch0:     tulip-2.0.5-fix.patch
 License:	GPL
 Group:		Graphics
+BuildRoot:	%{_tmppath}/%{name}-%{version}-root
 BuildRequires:	qt4-devel
 BuildRequires:	libmesaglut-devel
 BuildRequires:	xmltex doxygen
