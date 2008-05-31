@@ -1,7 +1,6 @@
 %define name	tulip
-%define version	3.0.0
-%define betaver B6
-%define release %mkrel -c %betaver 1
+%define version	3.0.1
+%define release %mkrel 1
 %define major	0
 %define libname	%mklibname %name %major
 %define develname %mklibname -d %name
@@ -11,11 +10,12 @@ Name:		%{name}
 Version:	%{version}
 Release:	%{release}
 URL:		http://www.tulip-software.org
-Source:		%{name}-%{version}%{betaver}.tar.bz2
+Source:		%{name}-%{version}.tar.bz2
 Source10:	%name-16.png
 Source11:	%name-32.png
 Source12:	%name-48.png
 Patch0:     tulip-2.0.5-fix.patch
+Patch1:		tulip-3.0.1-gcc4.3-includes.patch
 License:	GPL
 Group:		Graphics
 BuildRoot:	%{_tmppath}/%{name}-%{version}-root
@@ -83,8 +83,9 @@ Provides:       lib%name-qt = %version-%release
 A set of Qt Widgets for Tulip/Tulip-qt
 
 %prep
-%setup -q -n %{name}-%{version}%{betaver}
+%setup -q -n %{name}-%{version}
 #%patch -p0 -b .fix
+%patch1 -p1
 
 %build
 CFLAGS="$RPM_OPT_FLAGS" CXXFLAGS="$RPM_OPT_FLAGS"\
