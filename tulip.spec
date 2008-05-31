@@ -148,7 +148,6 @@ rm -rf $RPM_BUILD_ROOT
 %files -n %{libname}
 %defattr(-,root,root)
 %_libdir/libtulip-%{api}.so
-%_libdir/libtulip-pluginsmanager-%{api}.so
 %dir %_libdir/tlp
 %{_datadir}/aclocal/tulip.m4
 
@@ -175,5 +174,6 @@ rm -rf $RPM_BUILD_ROOT
 %files -n %{libname}-qt
 %defattr(-,root,root)
 %_libdir/libtulip-qt4-%{api}.so
+%_libdir/libtulip-pluginsmanager-%{api}.so
 %_libdir/tlp/*.so
 %_libdir/tlp/designer/*.so
