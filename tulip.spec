@@ -2,6 +2,7 @@
 %define version	3.0.1
 %define release %mkrel 1
 %define major	0
+%define api 3.0
 %define libname	%mklibname %name %major
 %define develname %mklibname -d %name
 
@@ -16,12 +17,12 @@ Source11:	%name-32.png
 Source12:	%name-48.png
 Patch0:     tulip-2.0.5-fix.patch
 Patch1:		tulip-3.0.1-gcc4.3-includes.patch
-License:	GPL
+License:	GPLv2+
 Group:		Graphics
 BuildRoot:	%{_tmppath}/%{name}-%{version}-root
 BuildRequires:	qt4-devel
-BuildRequires:	libmesaglut-devel
-BuildRequires:	xmltex doxygen
+BuildRequires:	libmesaglut-devel glew-devel
+BuildRequires:	xmltex doxygen graphviz libxml2-utils
 Obsoletes: tulip-render < %{version}
 
 %description
@@ -88,18 +89,15 @@ A set of Qt Widgets for Tulip/Tulip-qt
 %patch1 -p1
 
 %build
-CFLAGS="$RPM_OPT_FLAGS" CXXFLAGS="$RPM_OPT_FLAGS"\
-    ./configure \
-    --prefix=%{_prefix} \
-    --libdir=%_libdir \
+%configure2_5x \
     --with-qt-dir=%qt4dir \
     --with-qt-includes=%qt4include \
     --with-qt-libraries=%qt4lib \
     --with-gl-libraries=%_libdir
-
-%make RPM_OPT_FLAGS="$RPM_OPT_FLAGS"
+%make
 
 %install
+rm -fr %buildroot
 %makeinstall_std
 
 mkdir -p %buildroot{%{_miconsdir},%{_iconsdir},%{_liconsdir}}
@@ -141,6 +139,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root)
 %doc AUTHORS ChangeLog INSTALL NEWS README
 %_bindir/tulip
+%_datadir/tulip
 %{_datadir}/applications/mandriva-%{name}.desktop
 %{_miconsdir}/%name.png
 %{_iconsdir}/%name.png
@@ -148,42 +147,33 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n %{libname}
 %defattr(-,root,root)
-%_libdir/libtulip-%{version}%{betaver}.so
+%_libdir/libtulip-%{api}.so
+%_libdir/libtulip-pluginsmanager-%{api}.so
 %dir %_libdir/tlp
 %{_datadir}/aclocal/tulip.m4
 
 %files -n %{develname}
 %defattr(-,root,root)
+%_includedir/%name
 %_bindir/tulip-config
+%_bindir/tulip_check_pl
 %_libdir/*.la
-%_libdir/*.a
 %_libdir/libtulip.so
 %_libdir/libtulip-qt4.so
 %_libdir/libtulip-ogl.so
+%_libdir/libtulip-pluginsmanager.so
 %_libdir/tlp/*.la
-%_libdir/tlp/*.a
 %_libdir/tlp/designer/*.la
-%_libdir/tlp/designer/*.a
-%_libdir/tlp/designer/libElementPropertiesWidgetPlugin.so
-%_libdir/tlp/designer/libGlGraphWidgetPlugin.so
-%_libdir/tlp/designer/libGWOverviewWidgetPlugin.so
-%_libdir/tlp/designer/libPropertyWidgetPlugin.so
-%_libdir/tlp/designer/libSGHierarchyWidgetPlugin.so
-%_includedir/%name
 
 %files -n %{libname}-ogl
 %defattr(-,root,root)
-%_libdir/libtulip-ogl-%{version}%{betaver}.so
+%_libdir/libtulip-ogl-%{api}.so
 %_libdir/tlp/glyphs
 %dir %_libdir/tlp/bitmaps
 %_libdir/tlp/bitmaps/*
 
 %files -n %{libname}-qt
 %defattr(-,root,root)
-%_libdir/libtulip-qt4-%{version}%{betaver}.so
+%_libdir/libtulip-qt4-%{api}.so
 %_libdir/tlp/*.so
-%_libdir/tlp/designer/libElementPropertiesWidgetPlugin-%{version}%{betaver}.so
-%_libdir/tlp/designer/libGlGraphWidgetPlugin-%{version}%{betaver}.so
-%_libdir/tlp/designer/libGWOverviewWidgetPlugin-%{version}%{betaver}.so
-%_libdir/tlp/designer/libPropertyWidgetPlugin-%{version}%{betaver}.so
-%_libdir/tlp/designer/libSGHierarchyWidgetPlugin-%{version}%{betaver}.so
+%_libdir/tlp/designer/*.so
