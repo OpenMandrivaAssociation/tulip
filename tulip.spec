@@ -79,6 +79,7 @@ Group:          Graphics
 Requires:       %libname = %version-%release
 Provides:       %name-qt = %version-%release
 Provides:       lib%name-qt = %version-%release
+Conflicts:	%{develname} < 3.0.1
 
 %description -n %{libname}-qt
 A set of Qt Widgets for Tulip/Tulip-qt
