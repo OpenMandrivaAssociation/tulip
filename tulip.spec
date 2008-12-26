@@ -1,8 +1,8 @@
 %define name	tulip
-%define version	3.0.1
-%define release %mkrel 2
+%define version	3.1.0
+%define release %mkrel 1
 %define major	0
-%define api 3.0
+%define api 3.1
 %define libname	%mklibname %name %major
 %define develname %mklibname -d %name
 
@@ -12,11 +12,10 @@ Version:	%{version}
 Release:	%{release}
 URL:		http://www.tulip-software.org
 Source:		%{name}-%{version}.tar.bz2
+Source1:    tulip-%{version}-userManual.pdf
 Source10:	%name-16.png
 Source11:	%name-32.png
 Source12:	%name-48.png
-Patch0:     tulip-2.0.5-fix.patch
-Patch1:		tulip-3.0.1-gcc4.3-includes.patch
 License:	GPLv2+
 Group:		Graphics
 BuildRoot:	%{_tmppath}/%{name}-%{version}-root
@@ -86,8 +85,6 @@ A set of Qt Widgets for Tulip/Tulip-qt
 
 %prep
 %setup -q -n %{name}-%{version}
-#%patch -p0 -b .fix
-%patch1 -p1
 
 %build
 %configure2_5x \
@@ -166,11 +163,13 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root)
 %_libdir/libtulip-%{api}.so
 %dir %_libdir/tlp
+%_libdir/tlp/view/*.so
 %{_datadir}/aclocal/tulip.m4
 
 %files -n %{develname}
 %defattr(-,root,root)
 %_includedir/%name
+%_includedir/*.h
 %_bindir/tulip-config
 %_bindir/tulip_check_pl
 %_libdir/*.la
@@ -180,6 +179,7 @@ rm -rf $RPM_BUILD_ROOT
 %_libdir/libtulip-pluginsmanager.so
 %_libdir/tlp/*.la
 %_libdir/tlp/designer/*.la
+%_libdir/tlp/view/*.la
 
 %files -n %{libname}-ogl
 %defattr(-,root,root)
