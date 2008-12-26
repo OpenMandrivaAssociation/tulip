@@ -86,6 +86,8 @@ A set of Qt Widgets for Tulip/Tulip-qt
 %prep
 %setup -q -n %{name}-%{version}
 
+cp %SOURCE1 ./
+
 %build
 %configure2_5x \
     --with-qt-dir=%qt4dir \
@@ -152,6 +154,7 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root)
 %doc AUTHORS ChangeLog INSTALL NEWS README
+%doc tulip-%{version}-userManual.pdf
 %_bindir/tulip
 %_datadir/tulip
 %{_datadir}/applications/mandriva-%{name}.desktop
