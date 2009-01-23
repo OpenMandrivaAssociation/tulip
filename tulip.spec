@@ -1,5 +1,5 @@
 %define name	tulip
-%define version	3.1.0
+%define version	3.1.1
 %define release %mkrel 1
 %define major	0
 %define api 3.1
@@ -11,8 +11,8 @@ Name:		%{name}
 Version:	%{version}
 Release:	%{release}
 URL:		http://www.tulip-software.org
-Source:		%{name}-%{version}.tar.bz2
-Source1:    tulip-%{version}-userManual.pdf
+Source:		http://downloads.sourceforge.net/auber/%{name}-%{version}.tar.bz2
+Source1:	http://downloads.sourceforge.net/auber/tulip-%{version}-userManual.pdf
 Source10:	%name-16.png
 Source11:	%name-32.png
 Source12:	%name-48.png
