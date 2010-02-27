@@ -1,8 +1,8 @@
 %define name	tulip
-%define version	3.1.1
-%define release %mkrel 2
+%define version	3.3.0
+%define release %mkrel 1
 %define major	0
-%define api 3.1
+%define api 3.3
 %define libname	%mklibname %name %major
 %define develname %mklibname -d %name
 
@@ -16,10 +16,13 @@ Source1:	http://downloads.sourceforge.net/auber/tulip-%{version}-userManual.pdf
 Source10:	%name-16.png
 Source11:	%name-32.png
 Source12:	%name-48.png
+Patch0:		tulip-3.3.0-fix-link.patch
+Patch1:		tulip-3.3.0-fix-cmake-install.patch
 License:	GPLv2+
 Group:		Graphics
 BuildRoot:	%{_tmppath}/%{name}-%{version}-root
 BuildRequires:	qt4-devel
+BuildRequires:	cmake
 BuildRequires:	libmesaglut-devel glew-devel
 BuildRequires:	xmltex doxygen graphviz libxml2-utils
 Obsoletes: tulip-render < %{version}
@@ -85,20 +88,18 @@ A set of Qt Widgets for Tulip/Tulip-qt
 
 %prep
 %setup -q -n %{name}-%{version}
+%patch0 -p0
+%patch1 -p0
 
 cp %SOURCE1 ./
 
 %build
-%configure2_5x \
-    --with-qt-dir=%qt4dir \
-    --with-qt-includes=%qt4include \
-    --with-qt-libraries=%qt4lib \
-    --with-gl-libraries=%_libdir
+%cmake_qt4
 %make
 
 %install
 rm -fr %buildroot
-%makeinstall_std
+%makeinstall_std -C build
 
 mkdir -p %buildroot{%{_miconsdir},%{_iconsdir},%{_liconsdir}}
 
@@ -155,8 +156,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root)
 %doc AUTHORS ChangeLog INSTALL NEWS README
 %doc tulip-%{version}-userManual.pdf
-%_bindir/tulip
-%_datadir/tulip
+%{_bindir}/tulip
 %{_datadir}/applications/mandriva-%{name}.desktop
 %{_miconsdir}/%name.png
 %{_iconsdir}/%name.png
@@ -167,22 +167,13 @@ rm -rf $RPM_BUILD_ROOT
 %_libdir/libtulip-%{api}.so
 %dir %_libdir/tlp
 %_libdir/tlp/view/*.so
-%{_datadir}/aclocal/tulip.m4
 
 %files -n %{develname}
 %defattr(-,root,root)
 %_includedir/%name
-%_includedir/*.h
+%_datadir/apps/cmake/modules
 %_bindir/tulip-config
 %_bindir/tulip_check_pl
-%_libdir/*.la
-%_libdir/libtulip.so
-%_libdir/libtulip-qt4.so
-%_libdir/libtulip-ogl.so
-%_libdir/libtulip-pluginsmanager.so
-%_libdir/tlp/*.la
-%_libdir/tlp/designer/*.la
-%_libdir/tlp/view/*.la
 
 %files -n %{libname}-ogl
 %defattr(-,root,root)
@@ -196,4 +187,3 @@ rm -rf $RPM_BUILD_ROOT
 %_libdir/libtulip-qt4-%{api}.so
 %_libdir/libtulip-pluginsmanager-%{api}.so
 %_libdir/tlp/*.so
-%_libdir/tlp/designer/*.so
