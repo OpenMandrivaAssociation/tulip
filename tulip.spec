@@ -24,6 +24,9 @@ BuildRoot:	%{_tmppath}/%{name}-%{version}-root
 BuildRequires:	qt4-devel
 BuildRequires:	cmake
 BuildRequires:	libmesaglut-devel glew-devel
+BuildRequires:	zlib-devel
+BuildRequires:	png-devel
+BuildRequires:	jpeg-devel
 BuildRequires:	xmltex doxygen graphviz libxml2-utils
 Obsoletes: tulip-render < %{version}
 
