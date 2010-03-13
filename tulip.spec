@@ -1,5 +1,5 @@
 %define name	tulip
-%define version	3.3.0
+%define version	3.3.1
 %define release %mkrel 1
 %define major	0
 %define api 3.3
