@@ -1,6 +1,6 @@
 %define name	tulip
 %define version	3.3.1
-%define release %mkrel 1
+%define release %mkrel 2
 %define major	0
 %define api 3.3
 %define libname	%mklibname %name %major
@@ -21,7 +21,7 @@ Patch1:		tulip-3.3.0-fix-cmake-install.patch
 License:	GPLv2+
 Group:		Graphics
 BuildRoot:	%{_tmppath}/%{name}-%{version}-root
-BuildRequires:	qt4-devel
+BuildRequires:	qt4-devel qt-assistant-adp-devel
 BuildRequires:	cmake
 BuildRequires:	libmesaglut-devel glew-devel
 BuildRequires:	zlib-devel
