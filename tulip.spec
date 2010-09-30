@@ -1,8 +1,8 @@
 %define name	tulip
-%define version	3.3.1
-%define release %mkrel 2
+%define version	3.4.1
+%define release %mkrel 1
 %define major	0
-%define api 3.3
+%define api 3.4
 %define libname	%mklibname %name %major
 %define develname %mklibname -d %name
 
@@ -159,7 +159,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root)
 %doc AUTHORS ChangeLog INSTALL NEWS README
 %doc tulip-%{version}-userManual.pdf
-%{_bindir}/tulip
+%{_bindir}/tulip*
 %{_datadir}/applications/mandriva-%{name}.desktop
 %{_miconsdir}/%name.png
 %{_iconsdir}/%name.png
@@ -170,6 +170,7 @@ rm -rf $RPM_BUILD_ROOT
 %_libdir/libtulip-%{api}.so
 %dir %_libdir/tlp
 %_libdir/tlp/view/*.so
+%_libdir/tlp/interactors/*.so
 
 %files -n %{develname}
 %defattr(-,root,root)
