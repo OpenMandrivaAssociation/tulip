@@ -17,7 +17,7 @@ Source10:	%name-16.png
 Source11:	%name-32.png
 Source12:	%name-48.png
 Patch0:		tulip-3.3.0-fix-link.patch
-Patch1:		tulip-3.3.0-fix-cmake-install.patch
+Patch1:		tulip-3.4.1-fix-cmake-install.patch
 License:	GPLv2+
 Group:		Graphics
 BuildRoot:	%{_tmppath}/%{name}-%{version}-root
