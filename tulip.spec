@@ -35,6 +35,7 @@ BuildRequires:	xmltex doxygen graphviz libxml2-utils
 BuildRequires:	gomp-devel
 BuildRequires:	python-devel
 BuildRequires:	python-sphinx
+BuildRequires:	python-sip
 BuildRequires:	doxygen
 BuildRequires:	docbook-style-xsl
 BuildRequires:	ftgl-devel
