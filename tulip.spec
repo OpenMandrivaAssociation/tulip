@@ -1,8 +1,8 @@
 %define name	tulip
-%define version	3.4.1
-%define release %mkrel 2
+%define version	3.7.0
+%define release 1
 %define major	0
-%define api 3.4
+%define api 3.7
 %define libname	%mklibname %name %major
 %define develname %mklibname -d %name
 
@@ -11,23 +11,30 @@ Name:		%{name}
 Version:	%{version}
 Release:	%{release}
 URL:		http://www.tulip-software.org
-Source:		http://downloads.sourceforge.net/auber/%{name}-%{version}.tar.bz2
-Source1:	http://downloads.sourceforge.net/auber/tulip-%{version}-userManual.pdf
+Source0:	http://downloads.sourceforge.net/project/auber/%{name}/%{name}-%{version}/%{name}-%{version}-src.tar.gz
 Source10:	%name-16.png
 Source11:	%name-32.png
 Source12:	%name-48.png
-Patch0:		tulip-3.3.0-fix-link.patch
-Patch1:		tulip-3.4.1-fix-cmake-install.patch
+Source13:	mandriva-%{name}.desktop
+#Patch0:		tulip-3.3.0-fix-link.patch
+#Patch1:		tulip-3.4.1-fix-cmake-install.patch
+Patch0:		0001-fix-Missing-include-stdlib.h.patch
 License:	GPLv2+
 Group:		Graphics
 BuildRoot:	%{_tmppath}/%{name}-%{version}-root
-BuildRequires:	qt4-devel qt-assistant-adp-devel
+BuildRequires:	qt4-devel qt-assistant-adp-devel qt4-assistant
 BuildRequires:	cmake
 BuildRequires:	libmesaglut-devel glew-devel
 BuildRequires:	zlib-devel
 BuildRequires:	png-devel
 BuildRequires:	jpeg-devel
 BuildRequires:	xmltex doxygen graphviz libxml2-utils
+BuildRequires:	gomp-devel
+BuildRequires:	python-devel
+BuildRequires:	python-sphinx
+BuildRequires:	doxygen
+BuildRequires:	docbook-style-xsl
+BuildRequires:	texlive-passivetex
 Obsoletes: tulip-render < %{version}
 
 %description
@@ -70,7 +77,7 @@ tulip libraries.
 
 %package -n     %{libname}-ogl
 Summary:        A library for displaying graph in a GL context
-Group:		    Graphics
+Group:		Graphics
 Requires:       %{libname} = %version-%release
 Provides:       %name-qt = %version-%release
 Provides:       lib%name-ogl = %version-%release
@@ -89,37 +96,49 @@ Conflicts:	%{develname} < 3.0.1
 %description -n %{libname}-qt
 A set of Qt Widgets for Tulip/Tulip-qt
 
-%prep
-%setup -q -n %{name}-%{version}
-%patch0 -p0
-%patch1 -p0
+%package -n python-%{libname}
+Summary:	A Python binding for Tulip's library
+Group:		Development/Python
+Requires:       %libname = %version-%release
+Provides:	python-%{libname} = %version-%release
 
-cp %SOURCE1 ./
+%description -n python-%{libname}
+A Python binding for Tulip's library
+
+%package doc
+Summary:	Tulip user documentation
+License:	LGPLv2
+BuildArch:	noarch
+
+%description doc
+This package contains Tulip user documentation in HTML and PDF formats
+
+%package -n %{develname}-doc
+Summary:	Tulip developer Handbook
+License:	LGPLv2
+BuildArch:	noarch
+
+%description -n %{develname}-doc
+This package contains the Tulip developer Handbook in HTML and PDF formats
+
+%prep
+%setup -q -n %{name}-%{version}-src
+#patch0 -p0
+#patch1 -p0
+%patch0 -p1 -b .stdlib
 
 %build
-%cmake_qt4
+%cmake_qt4 -DBUILD_DOC=on
 %make
 
 %install
 rm -fr %buildroot
 %makeinstall_std -C build
 
-mkdir -p %buildroot{%{_miconsdir},%{_iconsdir},%{_liconsdir}}
-
-cp %SOURCE10 %{buildroot}%{_miconsdir}/%name.png
-cp %SOURCE11 %{buildroot}%{_iconsdir}/%name.png
-cp %SOURCE12 %{buildroot}%{_liconsdir}/%name.png
-
-mkdir -p %buildroot%{_datadir}/applications
-cat > %buildroot%{_datadir}/applications/mandriva-%{name}.desktop << EOF
-[Desktop Entry]
-Name=Tulip
-Comment=A 3D graph program
-Exec=tulip
-Icon=tulip
-Type=Application
-Categories=Qt;Graphics;3DGraphics;
-EOF
+%{__install} -m644 -D %SOURCE10 %{buildroot}%{_miconsdir}/%name.png
+%{__install} -m644 -D %SOURCE11 %{buildroot}%{_iconsdir}/%name.png
+%{__install} -m644 -D %SOURCE12 %{buildroot}%{_liconsdir}/%name.png
+%{__install} -m644 -D %SOURCE13 %{buildroot}%{_datadir}/applications/mandriva-%{name}.desktop
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -158,7 +177,6 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root)
 %doc AUTHORS ChangeLog INSTALL NEWS README
-%doc tulip-%{version}-userManual.pdf
 %{_bindir}/tulip*
 %{_datadir}/applications/mandriva-%{name}.desktop
 %{_miconsdir}/%name.png
@@ -191,3 +209,9 @@ rm -rf $RPM_BUILD_ROOT
 %_libdir/libtulip-qt4-%{api}.so
 %_libdir/libtulip-pluginsmanager-%{api}.so
 %_libdir/tlp/*.so
+
+%files -n python-%{libname}
+
+%files doc
+
+%files -n %{develname}-doc
