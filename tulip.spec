@@ -12,13 +12,16 @@ Version:	%{version}
 Release:	%{release}
 URL:		http://www.tulip-software.org
 Source0:	http://downloads.sourceforge.net/project/auber/%{name}/%{name}-%{version}/%{name}-%{version}-src.tar.gz
-Source10:	%name-16.png
-Source11:	%name-32.png
-Source12:	%name-48.png
-Source13:	mandriva-%{name}.desktop
+#Source10:	%name-16.png
+#Source11:	%name-32.png
+#Source12:	%name-48.png
+#Source13:	mandriva-%{name}.desktop
 #Patch0:		tulip-3.3.0-fix-link.patch
 #Patch1:		tulip-3.4.1-fix-cmake-install.patch
 Patch0:		0001-fix-Missing-include-stdlib.h.patch
+Patch1:		0001-fix-Force-link-of-libOGDF.so-against-pthread.patch
+Patch2:		0001-fix-Tulip-lib-install-dir.patch
+Patch3:		0001-fix-Path-for-python-packages-installation.patch
 License:	GPLv2+
 Group:		Graphics
 BuildRoot:	%{_tmppath}/%{name}-%{version}-root
@@ -34,7 +37,7 @@ BuildRequires:	python-devel
 BuildRequires:	python-sphinx
 BuildRequires:	doxygen
 BuildRequires:	docbook-style-xsl
-BuildRequires:	texlive-passivetex
+BuildRequires:	ftgl-devel
 Obsoletes: tulip-render < %{version}
 
 %description
@@ -68,6 +71,7 @@ Provides:	lib%{name}-devel = %version-%release
 Requires:       %libname = %version-%release
 Requires:       %{libname}-qt = %version-%release
 Requires:       %{libname}-ogl = %version-%release
+Requires:       %{libname}-ogdf = %version-%release
 Obsoletes:	%{libname}-devel
 
 %description -n %{develname}
@@ -84,6 +88,15 @@ Provides:       lib%name-ogl = %version-%release
 
 %description -n %{libname}-ogl
 A library for displaying graph in a GL context
+
+%package -n     %{libname}-ogdf
+Summary:        A library for playing with graph
+Group:		Development/C++
+Requires:       %{libname} = %version-%release
+Provides:       lib%name-ogdf = %version-%release
+
+%description -n %{libname}-ogdf
+A Library for playing with graph
 
 %package -n     %{libname}-qt
 Summary:        A set of Qt Widgets for Tulip/Tulip-qt
@@ -105,40 +118,53 @@ Provides:	python-%{libname} = %version-%release
 %description -n python-%{libname}
 A Python binding for Tulip's library
 
+%package -n python-%{libname}-doc
+Summary:	Documentation of Python binding for Tulip's library
+License:	LGPLv2
+BuildArch:	noarch
+
+%description -n python-%{libname}-doc
+Documentation of Python binding for Tulip's library
+
 %package doc
 Summary:	Tulip user documentation
 License:	LGPLv2
 BuildArch:	noarch
 
 %description doc
-This package contains Tulip user documentation in HTML and PDF formats
+This package contains Tulip user documentation in HTML
 
-%package -n %{develname}-doc
+%package -n %{name}-devel-doc
 Summary:	Tulip developer Handbook
 License:	LGPLv2
 BuildArch:	noarch
+Requires:	%{name}-doc = %{version}-%{release}
 
-%description -n %{develname}-doc
-This package contains the Tulip developer Handbook in HTML and PDF formats
+%description -n %{name}-devel-doc
+This package contains the Tulip developer Handbook in HTML
 
 %prep
 %setup -q -n %{name}-%{version}-src
 #patch0 -p0
 #patch1 -p0
-%patch0 -p1 -b .stdlib
+%apply_patches
+
+# defining at cmake level works but gets overwritten at make install step
+sed -ri 's/UBUNTU_PPA_BUILD OFF/UBUNTU_PPA_BUILD ON/g' CMakeLists.txt
 
 %build
-%cmake_qt4 -DBUILD_DOC=on
+# use -fpermissive to avoid:
+# [ 46%] Building CXX object library/tulip-python/tulip/CMakeFiles/tulippython.dir/siptuliptlpGraph.cpp.o
+# /home/alex/BuildSystem/tulip/BUILD/tulip-3.7.0-src/build/library/tulip-python/tulip/siptuliptlpGraph.cpp: In function 'PyObject* meth_tlp_Graph_setName(PyObject*, PyObject*)':
+# /home/alex/BuildSystem/tulip/BUILD/tulip-3.7.0-src/build/library/tulip-python/tulip/siptuliptlpGraph.cpp:5494:32: error: passing 'const tlp::Graph' as 'this' argument of 'virtual void tlp::Graph::setName(const string&)' discards qualifiers [-fpermissive]
+%cmake_qt4 -DBUILD_DOC=on -DCMAKE_CXX_FLAGS="-fpermissive"
 %make
 
 %install
 rm -fr %buildroot
 %makeinstall_std -C build
 
-%{__install} -m644 -D %SOURCE10 %{buildroot}%{_miconsdir}/%name.png
-%{__install} -m644 -D %SOURCE11 %{buildroot}%{_iconsdir}/%name.png
-%{__install} -m644 -D %SOURCE12 %{buildroot}%{_liconsdir}/%name.png
-%{__install} -m644 -D %SOURCE13 %{buildroot}%{_datadir}/applications/mandriva-%{name}.desktop
+%{__mv} %{buildroot}%{_datadir}/cmake-2.8 %{buildroot}%{_datadir}/cmake
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -176,42 +202,63 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root)
-%doc AUTHORS ChangeLog INSTALL NEWS README
-%{_bindir}/tulip*
-%{_datadir}/applications/mandriva-%{name}.desktop
-%{_miconsdir}/%name.png
-%{_iconsdir}/%name.png
-%{_liconsdir}/%name.png
+%{_bindir}/tulip
+%{_bindir}/tulip_app
+%{_bindir}/tulip_need_restart
+%{_datadir}/applications/
+%{_datadir}/pixmaps/
+%{_datadir}/%{name}/apiFiles/
+%{_datadir}/%{name}/%{name}*.qch
+%{_datadir}/%{name}/%{name}*.qhc
+#{_datadir}/doc/%{name}/AUTHORS
+#{_datadir}/doc/%{name}/ChangeLog
+#{_datadir}/doc/%{name}/INSTALL
+#{_datadir}/doc/%{name}/NEWS
+#{_datadir}/doc/%{name}/README
 
 %files -n %{libname}
 %defattr(-,root,root)
-%_libdir/libtulip-%{api}.so
-%dir %_libdir/tlp
-%_libdir/tlp/view/*.so
-%_libdir/tlp/interactors/*.so
+%{_libdir}/libgzstream-tulip*.so
+%{_libdir}/libOGDF-tulip*.so
+%{_libdir}/libtulip-%{api}.so
+%{_libdir}/tulip/view/*.so
+%{_libdir}/tulip/interactors/*.so
 
 %files -n %{develname}
 %defattr(-,root,root)
-%_includedir/%name
-%_datadir/apps/cmake/modules
-%_bindir/tulip-config
-%_bindir/tulip_check_pl
+%{_includedir}/%name
+%{_datadir}/cmake/Modules/
+%{_datadir}/tulip/*.cmake
+%{_bindir}/tulip-config
+%{_bindir}/tulip_check_pl
 
 %files -n %{libname}-ogl
 %defattr(-,root,root)
 %_libdir/libtulip-ogl-%{api}.so
-%_libdir/tlp/glyphs
-%dir %_libdir/tlp/bitmaps
-%_libdir/tlp/bitmaps/*
+%_libdir/tulip/glyphs
+%dir %_datadir/tulip/bitmaps
+%_datadir/tulip/bitmaps/*
+
+%files -n %{libname}-ogdf
+%{_libdir}/libtulip-ogdf-%{api}.so
+%{_libdir}/tulip/libogdf*.so
 
 %files -n %{libname}-qt
 %defattr(-,root,root)
 %_libdir/libtulip-qt4-%{api}.so
-%_libdir/libtulip-pluginsmanager-%{api}.so
-%_libdir/tlp/*.so
+%_libdir/tulip/*.so
+%exclude %{_libdir}/tulip/libogdf*.so
 
 %files -n python-%{libname}
+%{py_platlibdir}/dist-packages/
+
+%files -n python-%{libname}-doc
+%{_datadir}/doc/tulip-python/
 
 %files doc
+%{_datadir}/doc/tulip/userHandbook/
 
-%files -n %{develname}-doc
+%files -n %{name}-devel-doc
+%{_datadir}/doc/tulip/common/
+%{_datadir}/doc/tulip/doxygen/
+%{_datadir}/doc/tulip/developerHandbook/
