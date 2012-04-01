@@ -39,6 +39,7 @@ BuildRequires:	python-sip
 BuildRequires:	doxygen
 BuildRequires:	docbook-style-xsl
 BuildRequires:	ftgl-devel
+BuildRequires:	java
 Obsoletes: tulip-render < %{version}
 
 %description
