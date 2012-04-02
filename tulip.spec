@@ -1,6 +1,6 @@
 %define name	tulip
 %define version	3.7.0
-%define release 2
+%define release 3
 %define major	0
 %define api 3.7
 %define libname	%mklibname %name %major
@@ -23,6 +23,7 @@ Patch1:		0001-fix-Force-link-of-libOGDF.so-against-pthread.patch
 Patch2:		0001-fix-Tulip-lib-install-dir.patch
 Patch3:		0001-fix-Path-for-python-packages-installation.patch
 Patch4:		0001-fix-Use-local-XSL-references.patch
+Patch5:		0001-fix-Install-python-modules-in-site-packages.patch
 License:	GPLv2+
 Group:		Graphics
 BuildRoot:	%{_tmppath}/%{name}-%{version}-root
@@ -263,7 +264,7 @@ rm -rf $RPM_BUILD_ROOT
 %exclude %{_libdir}/tulip/libogdf*.so
 
 %files -n python-%{name}
-%{py_platlibdir}/dist-packages/
+%{py_platsitedir}/
 
 %files -n python-%{name}-doc
 %{_datadir}/doc/tulip-python/
