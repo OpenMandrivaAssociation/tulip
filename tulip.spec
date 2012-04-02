@@ -22,6 +22,7 @@ Patch0:		0001-fix-Missing-include-stdlib.h.patch
 Patch1:		0001-fix-Force-link-of-libOGDF.so-against-pthread.patch
 Patch2:		0001-fix-Tulip-lib-install-dir.patch
 Patch3:		0001-fix-Path-for-python-packages-installation.patch
+Patch4:		0001-fix-Use-local-XSL-references.patch
 License:	GPLv2+
 Group:		Graphics
 BuildRoot:	%{_tmppath}/%{name}-%{version}-root
