@@ -116,7 +116,6 @@ A set of Qt Widgets for Tulip/Tulip-qt
 Summary:	A Python binding for Tulip's library
 Group:		Development/Python
 Requires:       %libname = %version-%release
-Provides:	python-%{libname} = %version-%release
 
 %description -n python-%{libname}
 A Python binding for Tulip's library
