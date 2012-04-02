@@ -112,20 +112,20 @@ Conflicts:	%{develname} < 3.0.1
 %description -n %{libname}-qt
 A set of Qt Widgets for Tulip/Tulip-qt
 
-%package -n python-%{libname}
+%package -n python-%{name}
 Summary:	A Python binding for Tulip's library
 Group:		Development/Python
 Requires:       %libname = %version-%release
 
-%description -n python-%{libname}
+%description -n python-%{name}
 A Python binding for Tulip's library
 
-%package -n python-%{libname}-doc
+%package -n python-%{name}-doc
 Summary:	Documentation of Python binding for Tulip's library
 License:	LGPLv2
 BuildArch:	noarch
 
-%description -n python-%{libname}-doc
+%description -n python-%{name}-doc
 Documentation of Python binding for Tulip's library
 
 %package doc
@@ -251,10 +251,10 @@ rm -rf $RPM_BUILD_ROOT
 %_libdir/tulip/*.so
 %exclude %{_libdir}/tulip/libogdf*.so
 
-%files -n python-%{libname}
+%files -n python-%{name}
 %{py_platlibdir}/dist-packages/
 
-%files -n python-%{libname}-doc
+%files -n python-%{name}-doc
 %{_datadir}/doc/tulip-python/
 
 %files doc
