@@ -86,11 +86,20 @@ tulip libraries.
 Summary:        A library for displaying graph in a GL context
 Group:		Graphics
 Requires:       %{libname} = %version-%release
+Requires:	%{name}-ogl-data = %{version}-%{release}
 Provides:       %name-qt = %version-%release
 Provides:       lib%name-ogl = %version-%release
 
 %description -n %{libname}-ogl
 A library for displaying graph in a GL context
+
+%package -n     %{name}-ogl-data
+Summary:        Data files for Tulip's library for displaying graph in a GL context
+Group:		Graphics
+BuildArch:	noarch
+
+%description -n %{name}-ogl-data
+Data files for Tulip's library for displaying graph in a GL context
 
 %package -n     %{libname}-ogdf
 Summary:        A library for playing with graph
@@ -238,6 +247,8 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root)
 %_libdir/libtulip-ogl-%{api}.so
 %_libdir/tulip/glyphs
+
+%files -n %{name}-ogl-data
 %dir %_datadir/tulip/bitmaps
 %_datadir/tulip/bitmaps/*
 
