@@ -1,0 +1,27 @@
+From a3374d022c063ce2c04c37b93ea947b3d928b35d Mon Sep 17 00:00:00 2001
+From: Alexandre Lissy <alissy@mandriva.com>
+Date: Sun, 1 Apr 2012 12:49:56 +0200
+Subject: [PATCH] fix: Missing include <stdlib.h>
+
+Without this include, build fails with GCC 4.7 complaining about free()
+and realloc() not being declared in this namespace.
+---
+ library/tulip/include/tulip/SimpleVector.h |    2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/library/tulip/include/tulip/SimpleVector.h b/library/tulip/include/tulip/SimpleVector.h
+index 3c5076c..461fe1a 100755
+--- a/library/tulip/include/tulip/SimpleVector.h
++++ b/library/tulip/include/tulip/SimpleVector.h
+@@ -21,6 +21,8 @@
+ #ifndef _SIMPLE_VECTOR_H_
+ #define _SIMPLE_VECTOR_H_
+ 
++#include <stdlib.h>
++
+ namespace tlp {
+ 
+ // SimpleVector
+-- 
+1.7.9.2
+

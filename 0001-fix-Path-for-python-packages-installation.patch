@@ -1,0 +1,39 @@
+From a7e4299c1847619ad64d148859bacc5b4d51df8b Mon Sep 17 00:00:00 2001
+From: Alexandre Lissy <alissy@mandriva.com>
+Date: Sun, 1 Apr 2012 19:11:26 +0200
+Subject: [PATCH] fix: Path for python packages installation
+
+---
+ library/tulip-python/stl/CMakeLists.txt   |    2 +-
+ library/tulip-python/tulip/CMakeLists.txt |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/library/tulip-python/stl/CMakeLists.txt b/library/tulip-python/stl/CMakeLists.txt
+index 8db34fa..a118c7f 100755
+--- a/library/tulip-python/stl/CMakeLists.txt
++++ b/library/tulip-python/stl/CMakeLists.txt
+@@ -59,7 +59,7 @@ INSTALL(TARGETS ${LibStlPythonName}
+         ARCHIVE DESTINATION ${TulipLibInstallDir} COMPONENT tulip_python)
+ ELSE()
+ INSTALL(TARGETS ${LibStlPythonName}
+-        RUNTIME DESTINATION ${TulipBinInstallDir}/../lib/python${PYTHON_VERSION}/dist-packages COMPONENT tulip_python
++	RUNTIME DESTINATION ${TulipBinInstallDir}/../lib${LIB_SUFFIX}/python${PYTHON_VERSION}/dist-packages COMPONENT tulip_python
+         LIBRARY DESTINATION ${TulipLibInstallDir}/python${PYTHON_VERSION}/dist-packages COMPONENT tulip_python
+         ARCHIVE DESTINATION ${TulipLibInstallDir}/python${PYTHON_VERSION}/dist-packages COMPONENT tulip_python)
+ ENDIF()
+diff --git a/library/tulip-python/tulip/CMakeLists.txt b/library/tulip-python/tulip/CMakeLists.txt
+index ede663a..51a8113 100755
+--- a/library/tulip-python/tulip/CMakeLists.txt
++++ b/library/tulip-python/tulip/CMakeLists.txt
+@@ -118,7 +118,7 @@ INSTALL(TARGETS ${LibTulipPythonName}
+         ARCHIVE DESTINATION ${TulipLibInstallDir} COMPONENT tulip_python)
+ ELSE()
+ INSTALL(TARGETS ${LibTulipPythonName}
+-        RUNTIME DESTINATION ${TulipBinInstallDir}/../lib/python${PYTHON_VERSION}/dist-packages COMPONENT tulip_python
++	RUNTIME DESTINATION ${TulipBinInstallDir}/../lib${LIB_SUFFIX}/python${PYTHON_VERSION}/dist-packages COMPONENT tulip_python
+         LIBRARY DESTINATION ${TulipLibInstallDir}/python${PYTHON_VERSION}/dist-packages COMPONENT tulip_python
+         ARCHIVE DESTINATION ${TulipLibInstallDir}/python${PYTHON_VERSION}/dist-packages COMPONENT tulip_python)
+ ENDIF()
+-- 
+1.7.9.2
+

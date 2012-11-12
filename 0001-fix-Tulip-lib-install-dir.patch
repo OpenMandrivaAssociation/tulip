@@ -1,0 +1,26 @@
+From 969b27d4dd0e63838ac93ea6f4022b17265160dd Mon Sep 17 00:00:00 2001
+From: Alexandre Lissy <alissy@mandriva.com>
+Date: Sun, 1 Apr 2012 15:49:27 +0200
+Subject: [PATCH] fix: Tulip lib install dir
+
+Use lib64/ on 64 bits systems ...
+---
+ CMakeLists.txt |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1365a2f..5c5c7ef 100755
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -266,7 +266,7 @@ SET(TulipPluginsInstallDir ${TulipAppleContentsDir}lib/tulip/)
+ SET(TulipBitmapInstallDir ${TulipShareInstallDir}/bitmaps/)
+ SET(TulipAppleResourcesDir ${TulipAppleContentsDir}Resources/)
+ ELSE()
+-SET(TulipLibInstallDir lib/)
++SET(TulipLibInstallDir lib${LIB_SUFFIX}/)
+ SET(TulipPluginsInstallDir ${TulipLibInstallDir}/tulip/)
+ SET(TulipBinInstallDir bin/)
+ SET(TulipIncludeInstallDir include/)
+-- 
+1.7.9.2
+

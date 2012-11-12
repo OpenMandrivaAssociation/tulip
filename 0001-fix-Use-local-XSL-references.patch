@@ -1,0 +1,37 @@
+From 2f2d7ba140566832c40b975349b4199eb556706c Mon Sep 17 00:00:00 2001
+From: Alexandre Lissy <alissy@mandriva.com>
+Date: Mon, 2 Apr 2012 12:01:35 +0200
+Subject: [PATCH] fix: Use local XSL references
+
+Depending upon network references is bad. Using local references
+instead.
+---
+ docs/common/tulip-html.xsl |    2 +-
+ docs/common/tulip-pdf.xsl  |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/docs/common/tulip-html.xsl b/docs/common/tulip-html.xsl
+index 366f7e5..977045c 100755
+--- a/docs/common/tulip-html.xsl
++++ b/docs/common/tulip-html.xsl
+@@ -1,5 +1,5 @@
+ <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
+-    <xsl:import href="http://docbook.sourceforge.net/release/xsl/current/html/chunk.xsl"/>
++    <xsl:import href="/usr/share/sgml/docbook/xsl-stylesheets/html/chunk.xsl"/>
+     <xsl:param name="html.stylesheet" select="'../../common/tulip-default.css'"/>
+     <xsl:param name="use.extensions" select="0"/>
+     <xsl:param name="use.callouts" select="1"/>
+diff --git a/docs/common/tulip-pdf.xsl b/docs/common/tulip-pdf.xsl
+index 5711185..4839d73 100755
+--- a/docs/common/tulip-pdf.xsl
++++ b/docs/common/tulip-pdf.xsl
+@@ -1,5 +1,5 @@
+ <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0' xmlns:fo="http://www.w3.org/1999/XSL/Format">
+-    <xsl:import href="http://docbook.sourceforge.net/release/xsl/current/fo/docbook.xsl"/>
++    <xsl:import href="/usr/share/sgml/docbook/xsl-stylesheets/fo/docbook.xsl"/>
+     <xsl:param name="paper.type" select="'A4'" />
+     <xsl:param name="pape.orientation" select="'portrait'" />
+     <xsl:param name="chapter.autolabel" select="1" />
+-- 
+1.7.9.2
+
