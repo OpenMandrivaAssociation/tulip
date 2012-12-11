@@ -29,9 +29,10 @@ Group:		Graphics
 BuildRoot:	%{_tmppath}/%{name}-%{version}-root
 BuildRequires:	qt4-devel qt-assistant-adp-devel qt4-assistant
 BuildRequires:	cmake
-BuildRequires:	libmesaglut-devel glew-devel
-BuildRequires:	zlib-devel
-BuildRequires:	png-devel
+BuildRequires:	pkgconfig(glew)
+BuildRequires:	pkgconfig(gl)
+BuildRequires:	pkgconfig(zlib)
+BuildRequires:	pkgconfig(libpng)
 BuildRequires:	jpeg-devel
 BuildRequires:	xmltex doxygen graphviz libxml2-utils
 BuildRequires:	gomp-devel
@@ -173,44 +174,9 @@ sed -ri 's/UBUNTU_PPA_BUILD OFF/UBUNTU_PPA_BUILD ON/g' CMakeLists.txt
 %make
 
 %install
-rm -fr %buildroot
 %makeinstall_std -C build
 
 %{__mv} %{buildroot}%{_datadir}/cmake-2.8 %{buildroot}%{_datadir}/cmake
-
-%clean
-rm -rf $RPM_BUILD_ROOT
-
-%if %mdkversion < 200900
-%post
-%{update_menus}
-%endif
-
-%if %mdkversion < 200900
-%postun
-%{clean_menus}
-%endif
-
-%if %mdkversion < 200900
-%post -n %{libname} -p /sbin/ldconfig
-%endif
-%if %mdkversion < 200900
-%postun -n %{libname} -p /sbin/ldconfig
-%endif
-
-%if %mdkversion < 200900
-%post -n %{libname}-ogl -p /sbin/ldconfig
-%endif
-%if %mdkversion < 200900
-%postun -n %{libname}-ogl -p /sbin/ldconfig
-%endif
-
-%if %mdkversion < 200900
-%post -n %{libname}-qt -p /sbin/ldconfig
-%endif
-%if %mdkversion < 200900
-%postun -n %{libname}-qt -p /sbin/ldconfig
-%endif
 
 %files
 %defattr(-,root,root)
@@ -229,7 +195,6 @@ rm -rf $RPM_BUILD_ROOT
 #{_datadir}/doc/%{name}/README
 
 %files -n %{libname}
-%defattr(-,root,root)
 %{_libdir}/libgzstream-tulip*.so
 %{_libdir}/libOGDF-tulip*.so
 %{_libdir}/libtulip-%{api}.so
@@ -237,7 +202,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/tulip/interactors/*.so
 
 %files -n %{develname}
-%defattr(-,root,root)
 %{_includedir}/%name
 %{_datadir}/cmake/Modules/
 %{_datadir}/tulip/*.cmake
@@ -245,7 +209,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/tulip_check_pl
 
 %files -n %{libname}-ogl
-%defattr(-,root,root)
 %_libdir/libtulip-ogl-%{api}.so
 %_libdir/tulip/glyphs
 
@@ -276,3 +239,91 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/doc/tulip/common/
 %{_datadir}/doc/tulip/doxygen/
 %{_datadir}/doc/tulip/developerHandbook/
+
+
+%changelog
+* Mon Apr 02 2012 Alexandre Lissy <alissy@mandriva.com> 3.7.0-3
++ Revision: 788761
+- Fixing installation path of python modules
+- pushing release
+- Putting platform-independant bitmaps in separate and platform-independant package
+- Using %%{name} for python package name and not %%{libname} -> python-lib64tulip0 becomes python-tulip
+- fix: rpmlint flags useless provide on python-lib64tulip0
+
+* Mon Apr 02 2012 Alexandre Lissy <alissy@mandriva.com> 3.7.0-1
++ Revision: 788719
+- Fixing remote references to XSL with local ones.
+- Adding java buildrequires for documentation building
+- Adding buildrequires against python-sip
+- Tulip 3.7.0 building
+  Using icons and desktop file provided
+  Building as "Ubuntu PPA" (correct install paths)
+- Updating to tulip 3.7.0
+  Introducing python binding
+  Splitting doc in separate package
+  Building doc from sources
+  Managing .desktop file as source file
+  Removing useless patches
+  Adding gcc 4.7 specific patch
+  Adding new buildrequires to follow those changes (qt4-assistant, python-devel, python-sphinx, doxygen, docbook-style-xsl, texlive-passivetex)
+
+* Thu Oct 28 2010 Funda Wang <fwang@mandriva.org> 3.4.1-2mdv2011.0
++ Revision: 589709
+- rebuild
+
+* Thu Sep 30 2010 Funda Wang <fwang@mandriva.org> 3.4.1-1mdv2011.0
++ Revision: 582130
+- should be 3.4.1
+- new version 3.4.1
+- BR qt-assistant-adp
+
+* Sat Mar 13 2010 Funda Wang <fwang@mandriva.org> 3.3.1-1mdv2010.1
++ Revision: 518688
+- new version 3.3.1
+- add BR
+
+* Sat Feb 27 2010 Funda Wang <fwang@mandriva.org> 3.3.0-1mdv2010.1
++ Revision: 512269
+- New version 3.3.0
+
+  + Thierry Vignaud <tv@mandriva.org>
+    - rebuild
+
+* Fri Jan 23 2009 Funda Wang <fwang@mandriva.org> 3.1.1-1mdv2009.1
++ Revision: 333094
+- New version 3.1.1
+
+* Fri Dec 26 2008 Olivier Thauvin <nanardon@mandriva.org> 3.1.0-1mdv2009.1
++ Revision: 319257
+- install the pdf documentation
+- 3.1.0
+
+* Fri Aug 08 2008 Thierry Vignaud <tv@mandriva.org> 3.0.1-2mdv2009.0
++ Revision: 269440
+- rebuild early 2009.0 package (before pixel changes)
+
+  + Pixel <pixel@mandriva.com>
+    - rpm filetriggers deprecates update_menus/update_scrollkeeper/update_mime_database/update_icon_cache/update_desktop_database/post_install_gconf_schemas
+    - do not call ldconfig in %%post/%%postun, it is now handled by filetriggers
+
+* Sat May 31 2008 Funda Wang <fwang@mandriva.org> 3.0.1-1mdv2009.0
++ Revision: 213663
+- add conflicts with old packages
+- move plugin manager to qt package
+- clean file list
+- more patches
+- New version 3.0.1
+
+  + Olivier Blin <blino@mandriva.org>
+    - restore BuildRoot
+
+  + Thierry Vignaud <tv@mandriva.org>
+    - kill re-definition of %%buildroot on Pixel's request
+
+* Sun Jul 15 2007 Funda Wang <fwang@mandriva.org> 3.0.0-0.B6.1mdv2008.0
++ Revision: 52198
+- fix file list
+- use xdg menu
+- BR qt4
+- New version
+
