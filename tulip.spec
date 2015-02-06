@@ -1,6 +1,6 @@
 %define name	tulip
 %define version	3.7.0
-%define release 3
+%define release 4
 %define major	0
 %define api 3.7
 %define libname	%mklibname %name %major
