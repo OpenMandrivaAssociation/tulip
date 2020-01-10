@@ -160,7 +160,7 @@ This package contains the Tulip developer Handbook in HTML
 %setup -q -n %{name}-%{version}-src
 #patch0 -p0
 #patch1 -p0
-%apply_patches
+%autopatch -p1
 
 # defining at cmake level works but gets overwritten at make install step
 sed -ri 's/UBUNTU_PPA_BUILD OFF/UBUNTU_PPA_BUILD ON/g' CMakeLists.txt
