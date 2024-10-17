@@ -10,7 +10,7 @@ Summary:	A program that allows visualization of huge graphs
 Name:		%{name}
 Version:	%{version}
 Release:	%{release}
-URL:		http://www.tulip-software.org
+URL:		https://www.tulip-software.org
 Source0:	http://downloads.sourceforge.net/project/auber/%{name}/%{name}-%{version}/%{name}-%{version}-src.tar.gz
 #Source10:	%name-16.png
 #Source11:	%name-32.png
